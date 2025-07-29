@@ -36,6 +36,13 @@ function validateNutriQRArray(arr: unknown[]): string | null {
   // Brand|Product
   if (typeof arr[0] !== 'string' || arr[0].length < 1)
     return 'Brand|Product must be a non-empty string.';
+  if (
+    !arr[0].includes('|') ||
+    arr[0].split('|').length !== 2 ||
+    arr[0].split('|')[0].trim() === '' ||
+    arr[0].split('|')[1].trim() === ''
+  )
+    return 'Brand|Product must include a | delimiter and both manufacturer and product name must be non-empty.';
   // Unit
   if (typeof arr[1] !== 'string' || !['g', 'ml', 'oz', 'fl'].includes(arr[1]))
     return 'Unit must be one of "g", "ml", "oz", "fl".';
@@ -57,9 +64,11 @@ function validateNutriQRArray(arr: unknown[]): string | null {
   if (n[4] > n[3]) return 'Sugars must be less than or equal to carbohydrates.';
   if (n[2] > n[1])
     return 'Saturated fat must be less than or equal to total fat.';
-  const totalNutrients = n.reduce((a, b) => a + b, 0);
+  // Exclude saturated fat (n[2]) and sugar (n[4]) from total, as they are included in fat and carbs
+  const totalNutrients =
+    n[0] + n[1] + n[3] + n[5] + n[6] + (n.length === 8 ? n[7] : 0);
   if (totalNutrients > arr[2])
-    return 'Sum of nutrients must not exceed base quantity.';
+    return 'Sum of nutrients (excluding saturated fat and sugar) must not exceed base quantity.';
   return null;
 }
 
