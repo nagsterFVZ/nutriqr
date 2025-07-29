@@ -40,7 +40,16 @@ NutriQR encodes nutrition data as a minified JSON array with six fixed positions
 ];
 ```
 
-This example encodes complete nutrition information for a 100g of oats in just 82 bytes (once minified).
+This example encodes complete nutrition information for a 100g portion of oats in just 82 bytes (once minified).
+
+<table>
+  <tr>
+    <td style="vertical-align:top; text-align:center;">
+      <img src="example-nutriqr.png" alt="NutriQR Example" width="100" style="border-radius:16px" /><br />
+      <figcaption style="text-align:center;">The above example as a QR code</figcaption>
+    </td>
+  </tr>
+</table>
 
 ## 📦 Packages
 
