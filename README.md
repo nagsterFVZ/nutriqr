@@ -71,24 +71,24 @@ npm install nutriqr
 import { createNutriQRString, decodeNutriQRString } from "nutriqr";
 
 // Create a NutriQR string
-const nutriqr = createNutriQRString({
-  gtin: "8720828249062",
-  brand: "Upfront",
-  product: "Eiwit Oats",
-  baseUnit: "g",
-  baseQuantity: 100,
-  portionMultiplier: 0.4,
-  nutrients: {
-    energy: 415,
+const nutriqr = createNutriQRString(
+  "8720828249062",
+  "Upfront",
+  "Eiwit Oats",
+  "g",
+  100,
+  0.4,
+  {
+    energyKcal: 415,
     fat: 13,
     saturatedFat: 5.6,
-    carbohydrates: 43,
-    sugars: 9.7,
+    carbs: 43,
+    sugar: 9.7,
     salt: 0.47,
     protein: 25,
     fiber: 8.5,
-  },
-});
+  }
+);
 
 // Decode a NutriQR string
 const decoded = decodeNutriQRString(nutriqr);
