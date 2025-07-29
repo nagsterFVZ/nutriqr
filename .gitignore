@@ -1,0 +1,38 @@
+# General
+.DS_Store
+*.log
+*.tmp
+
+# Node
+node_modules/
+dist/
+build/
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# VSCode or JetBrains
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Swift
+.build/
+DerivedData/
+
+# C#
+bin/
+obj/
+
+# Test snapshots or coverage (optional)
+coverage/
+*.snap
+
+# Others (optional)
+.env
+.env.*
