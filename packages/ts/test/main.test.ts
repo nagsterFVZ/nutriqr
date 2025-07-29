@@ -5,7 +5,62 @@ import {
   createNutriQRString
 } from '../src/index';
 
+const goodNutrients = {
+  energyKcal: 50,
+  fat: 10,
+  saturatedFat: 5,
+  carbs: 20,
+  sugar: 10,
+  salt: 1,
+  protein: 4
+};
+
 describe('NutriQR Spec v1.0 Functions', () => {
+  it('handles escaped | in manufacturer and productName', () => {
+    // Manufacturer contains |
+    const str1 = createNutriQRString(
+      '8720828249062',
+      'Bran\\|d',
+      'Pro\\|duct',
+      'g',
+      100,
+      1,
+      goodNutrients
+    );
+    const decoded1 = decodeNutriQRString(str1);
+    expect(decoded1.manufacturer).toBe('Bran|d');
+    expect(decoded1.productName).toBe('Pro|duct');
+    expect(isNutriQRString(str1)).toBe(true);
+
+    // Product name contains multiple escaped |
+    const str2 = createNutriQRString(
+      '8720828249062',
+      'Brand',
+      'Pro\\|du\\|ct',
+      'g',
+      100,
+      1,
+      goodNutrients
+    );
+    const decoded2 = decodeNutriQRString(str2);
+    expect(decoded2.productName).toBe('Pro|du|ct');
+    expect(isNutriQRString(str2)).toBe(true);
+  });
+
+  it('fails if extra | is not escaped', () => {
+    // Unescaped | in manufacturer
+    const arr = [
+      '8720828249062',
+      'Brand|With|Pipe|Product',
+      'g',
+      100,
+      1,
+      [50, 10, 5, 20, 25, 1, 4]
+    ];
+    const str = JSON.stringify(arr);
+    expect(isNutriQRString(str)).toBe(false);
+    expect(() => decodeNutriQRString(str)).toThrow(/NutriQR validation failed/);
+  });
   const validNutriQR = [
     '8720828249062',
     'Brand|Product',

@@ -1,3 +1,32 @@
+// Utility to split on first unescaped delimiter and unescape
+function splitEscapedDelimiter(
+  str: string,
+  delimiter: string = '|'
+): [string, string] | null {
+  let idx = -1;
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === delimiter) {
+      let backslashes = 0;
+      let j = i - 1;
+      while (j >= 0 && str[j] === '\\') {
+        backslashes++;
+        j--;
+      }
+      if (backslashes % 2 === 0) {
+        idx = i;
+        break;
+      }
+    }
+  }
+  if (idx === -1) return null;
+  const left = str.slice(0, idx).replace(/\\\|/g, '|').trim();
+  const right = str
+    .slice(idx + 1)
+    .replace(/\\\|/g, '|')
+    .trim();
+  return [left, right];
+}
+
 // NutriQR Spec v1.0 Functions
 
 export type NutriQRUnit = 'g' | 'ml' | 'oz' | 'fl';
@@ -38,16 +67,16 @@ function validateNutriQRArray(arr: unknown[]): string | null {
   // GTIN-13
   if (typeof arr[0] !== 'string' || !(arr[0] === '' || /^\d{13}$/.test(arr[0])))
     return 'GTIN-13 must be an empty string or a 13-digit string.';
-  // Brand|Product
+  // Brand|Product with escaping
   if (typeof arr[1] !== 'string' || arr[1].length < 1)
     return 'Brand|Product must be a non-empty string.';
-  if (
-    !arr[1].includes('|') ||
-    arr[1].split('|').length !== 2 ||
-    arr[1].split('|')[0].trim() === '' ||
-    arr[1].split('|')[1].trim() === ''
-  )
-    return 'Brand|Product must include a | delimiter and both manufacturer and product name must be non-empty.';
+  // Use splitEscapedDelimiter for Brand|Product
+  const split = splitEscapedDelimiter(arr[1] as string, '|');
+  if (!split)
+    return 'Brand|Product must include a | delimiter (unescaped) between manufacturer and product name.';
+  const [manufacturer, productName] = split;
+  if (!manufacturer || !productName)
+    return 'Both manufacturer and product name must be non-empty.';
   // Unit
   if (typeof arr[2] !== 'string' || !['g', 'ml', 'oz', 'fl'].includes(arr[2]))
     return 'Unit must be one of "g", "ml", "oz", "fl".';
@@ -98,8 +127,13 @@ export function decodeNutriQRString(str: string): ExpandedData {
   const error = validateNutriQRArray(arr as unknown[]);
   if (error) throw new Error('NutriQR validation failed: ' + error);
   const a = arr as NutriQR;
-  // Split manufacturer and product
-  const [manufacturer, productName] = a[1].split('|');
+  // Use splitEscapedDelimiter for manufacturer and productName
+  let manufacturer = '';
+  let productName = '';
+  const split = splitEscapedDelimiter(a[1], '|');
+  if (split) {
+    [manufacturer, productName] = split;
+  }
   const nutrientsArr = a[5];
   return {
     gtin13: a[0],
