@@ -7,6 +7,7 @@ import {
 
 describe('NutriQR Spec v1.0 Functions', () => {
   const validNutriQR = [
+    '8720828249062',
     'Brand|Product',
     'g',
     100,
@@ -24,6 +25,7 @@ describe('NutriQR Spec v1.0 Functions', () => {
     expect(
       isNutriQRString(
         JSON.stringify([
+          '8720828249062',
           'Brand|Product',
           'g',
           100,
@@ -35,6 +37,7 @@ describe('NutriQR Spec v1.0 Functions', () => {
     expect(
       isNutriQRString(
         JSON.stringify([
+          '8720828249062',
           'Brand|Product',
           'g',
           100,
@@ -45,12 +48,20 @@ describe('NutriQR Spec v1.0 Functions', () => {
     ).toBe(false); // sat fat > fat
     expect(
       isNutriQRString(
-        JSON.stringify(['Brand|Product', 'g', 100, 1, [50, 10, 5, 20, 10, 1]])
+        JSON.stringify([
+          '8720828249062',
+          'Brand|Product',
+          'g',
+          100,
+          1,
+          [50, 10, 5, 20, 10, 1]
+        ])
       )
     ).toBe(false); // too few nutrients
     expect(
       isNutriQRString(
         JSON.stringify([
+          '8720828249062',
           'Brand|Product',
           'g',
           100,
@@ -98,12 +109,21 @@ describe('NutriQR Spec v1.0 Functions', () => {
 
   it('createNutriQRString creates valid NutriQR string', () => {
     const str = createNutriQRString(
+      '8720828249062',
       'Brand',
       'Product',
       'g',
       100,
       1,
-      [50, 10, 5, 20, 10, 1, 4]
+      {
+        energyKcal: 50,
+        fat: 10,
+        saturatedFat: 5,
+        carbs: 20,
+        sugar: 10,
+        salt: 1,
+        protein: 4
+      }
     );
     expect(isNutriQRString(str)).toBe(true);
     const decoded = decodeNutriQRString(str);
@@ -117,38 +137,69 @@ describe('NutriQR Spec v1.0 Functions', () => {
 
   it('createNutriQRString throws on invalid input', () => {
     expect(() =>
-      createNutriQRString('', 'Product', 'g', 100, 1, [50, 10, 5, 20, 10, 1, 4])
+      createNutriQRString('', '', 'Product', 'g', 100, 1, {
+        energyKcal: 50,
+        fat: 10,
+        saturatedFat: 5,
+        carbs: 20,
+        sugar: 25,
+        salt: 1,
+        protein: 4
+      })
     ).toThrow(/NutriQR validation failed/);
     expect(() =>
-      createNutriQRString(
-        'Brand',
-        'Product',
-        'g',
-        -1,
-        1,
-        [50, 10, 5, 20, 10, 1, 4]
-      )
+      createNutriQRString('123456789', '', 'Product', 'g', 100, 1, {
+        energyKcal: 50,
+        fat: 10,
+        saturatedFat: 5,
+        carbs: 20,
+        sugar: 25,
+        salt: 1,
+        protein: 4
+      })
     ).toThrow(/NutriQR validation failed/);
     expect(() =>
-      createNutriQRString(
-        'Brand',
-        'Product',
-        'g',
-        100,
-        1,
-        [50, 10, 5, 20, 25, 1, 4]
-      )
+      createNutriQRString('8720828249062', 'Brand', 'Product', 'g', -1, 1, {
+        energyKcal: 50,
+        fat: 10,
+        saturatedFat: 5,
+        carbs: 20,
+        sugar: 10,
+        salt: 1,
+        protein: 4
+      })
+    ).toThrow(/NutriQR validation failed/);
+    expect(() =>
+      createNutriQRString('8720828249062', 'Brand', 'Product', 'g', 100, 1, {
+        energyKcal: 50,
+        fat: 10,
+        saturatedFat: 5,
+        carbs: 20,
+        sugar: 25,
+        salt: 1,
+        protein: 4
+      })
     ).toThrow(/NutriQR validation failed/);
   });
 
   it('handles optional fibre nutrient', () => {
     const str = createNutriQRString(
+      '8720828249062',
       'Brand',
       'Product',
       'g',
       100,
       1,
-      [50, 10, 5, 20, 10, 1, 4, 2]
+      {
+        energyKcal: 50,
+        fat: 10,
+        saturatedFat: 5,
+        carbs: 20,
+        sugar: 10,
+        salt: 1,
+        protein: 4,
+        fibre: 2
+      }
     );
     const decoded = decodeNutriQRString(str);
     expect(decoded.nutrients.fibre).toBe(2);
