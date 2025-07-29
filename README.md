@@ -29,15 +29,15 @@ The complete technical specification is available in [`spec.md`](spec.md).
 
 NutriQR encodes nutrition data as a minified JSON array with six fixed positions:
 
-```json
+```js
 [
   "8720828249062", // GTIN-13 product identifier
   "Upfront|Eiwit Oats", // Brand|Product name
   "g", // Base unit (g/ml/oz/fl)
   100, // Base quantity
   0.4, // Portion multiplier
-  [415, 13, 5.6, 43, 9.7, 0.47, 25, 8.5] // Nutrients (kcal,fat,sat fat,carbs,sugars,salt,protein,fiber)
-]
+  [415, 13, 5.6, 43, 9.7, 0.47, 25, 8.5], // Nutrients (kcal,fat,sat fat,carbs,sugars,salt,protein,fiber)
+];
 ```
 
 This example encodes complete nutrition information for a 100g of oats in just 82 bytes (once minified).
