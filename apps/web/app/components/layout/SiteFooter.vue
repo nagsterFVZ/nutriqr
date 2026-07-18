@@ -21,6 +21,14 @@
         >
           TypeScript package
         </a>
+        <a
+          href="https://www.npmjs.com/package/nutriqr"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition-colors hover:text-primary"
+        >
+          npm
+        </a>
       </div>
     </div>
   </footer>

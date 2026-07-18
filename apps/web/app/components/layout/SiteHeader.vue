@@ -28,6 +28,14 @@ const navLinks = [
           {{ link.label }}
         </NuxtLink>
         <a
+          href="https://www.npmjs.com/package/nutriqr"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-neutral-700 transition-colors hover:text-primary"
+        >
+          npm
+        </a>
+        <a
           href="https://github.com/nagsterFVZ/nutriqr"
           target="_blank"
           rel="noopener noreferrer"

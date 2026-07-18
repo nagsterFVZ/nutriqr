@@ -2,6 +2,7 @@
 
 > Ultra-compact nutrition data encoding for QR codes
 
+[![npm version](https://img.shields.io/npm/v/nutriqr.svg)](https://www.npmjs.com/package/nutriqr)
 [![License: MIT + Commons Clause](https://img.shields.io/badge/License-MIT%20%2B%20Commons%20Clause-yellow.svg)](LICENSE)
 
 NutriQR is a specification and library ecosystem for encoding complete nutrition information into ultra-compact QR codes. By packing all mandatory EU nutrition labeling data into under 160 bytes (depending on product name and manufacturer name), NutriQR enables offline nutrition tracking and fast product identification without relying on external databases.
@@ -85,9 +86,9 @@ Then open `http://localhost:3000`. The site depends on the local `nutriqr` packa
 
 ### TypeScript/JavaScript
 
-<!-- ```bash
+```bash
 npm install nutriqr
-``` -->
+```
 
 ```typescript
 import { createNutriQRString, decodeNutriQRString } from "nutriqr";

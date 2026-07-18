@@ -1,5 +1,7 @@
 # nutriqr
 
+[![npm version](https://img.shields.io/npm/v/nutriqr.svg)](https://www.npmjs.com/package/nutriqr)
+
 Reference TypeScript implementation of [NutriQR](https://github.com/nagsterFVZ/nutriqr) — a compact, open format for encoding EU nutrition-label data into a QR code payload.
 
 Zero runtime dependencies. Ships as dual ESM/CJS with TypeScript types.
