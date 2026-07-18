@@ -1,0 +1,35 @@
+# Node
+node_modules/
+**/node_modules/
+npm-debug.log*
+
+# Git / GitHub
+.git/
+.github/
+
+# Env (never bake secrets into an image layer)
+.env
+.env.*
+!.env.example
+
+# Build outputs (rebuilt fresh inside the image)
+dist/
+**/dist/
+.nuxt/
+**/.nuxt/
+.output/
+**/.output/
+*.tsbuildinfo
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Claude Code
+.claude/
+
+# Misc
+*.log
+*.tmp
+coverage/

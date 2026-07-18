@@ -1,0 +1,34 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nutriqr-website:latest
+    container_name: nutriqr-website
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - NITRO_PORT=3000
+      - NITRO_HOST=0.0.0.0
+    expose:
+      - 3000
+    networks:
+      - web
+    labels:
+      # Enable Traefik for this container
+      - 'traefik.enable=true'
+
+      # HTTPS router
+      - 'traefik.http.routers.nutriqr.rule=Host(`${DOMAIN}`)'
+      - 'traefik.http.routers.nutriqr.entrypoints=websecure'
+      - 'traefik.http.routers.nutriqr.tls=true'
+      - 'traefik.http.routers.nutriqr.tls.certresolver=${CERT_RESOLVER:-letsencrypt}'
+
+      # Service configuration
+      - 'traefik.http.services.nutriqr.loadbalancer.server.port=3000'
+
+networks:
+  web:
+    external: true
