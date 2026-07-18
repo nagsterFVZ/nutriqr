@@ -10,14 +10,22 @@ export type {
   NutriQRUnit,
   NutriQR,
   ExpandedData,
-  NutrientInput
+  NutrientInput,
+  NutriQRPrefixMatch
 } from './types.js';
 
 // Export error types and classes
 export { NutriQRErrorType, NutriQRError, ERROR_MESSAGES } from './errors.js';
 
+// Export envelope constants
+export {
+  NUTRIQR_VERSION,
+  NUTRIQR_PREFIX,
+  NUTRIQR_PREFIX_REGEX
+} from './constants.js';
+
 // Export utility functions
-export { splitEscapedDelimiter } from './utils.js';
+export { splitEscapedDelimiter, parseNutriQRPrefix } from './utils.js';
 
 // Export validation functions
 export { validateNutriQRArray } from './validation.js';

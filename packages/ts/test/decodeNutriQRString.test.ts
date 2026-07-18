@@ -2,9 +2,10 @@ import { describe, it, expect } from 'vitest';
 import {
   decodeNutriQRString,
   createNutriQRString,
-  NutriQRErrorType
+  NutriQRErrorType,
+  NUTRIQR_PREFIX
 } from '../src/index';
-import { expectNutriQRErrorThrown } from './testUtils';
+import { expectNutriQRErrorThrown, toRawNutriQRString } from './testUtils';
 
 const goodNutrients = {
   energyKcal: 50,
@@ -26,8 +27,9 @@ describe('decodeNutriQRString', () => {
       1,
       [50, 10, 5, 20, 10, 1, 4]
     ];
-    const validNutriQRString = JSON.stringify(validNutriQR);
+    const validNutriQRString = toRawNutriQRString(validNutriQR);
     const result = decodeNutriQRString(validNutriQRString);
+    expect(result.version).toBe(1);
     expect(result.manufacturer).toBe('Brand');
     expect(result.productName).toBe('Product');
     expect(result.unit).toBe('g');
@@ -46,14 +48,14 @@ describe('decodeNutriQRString', () => {
 
   it('throws on invalid string', () => {
     expectNutriQRErrorThrown(
-      () => decodeNutriQRString('not a json'),
+      () => decodeNutriQRString(`${NUTRIQR_PREFIX}not a json`),
       NutriQRErrorType.INVALID_JSON
     );
 
     expectNutriQRErrorThrown(
       () =>
         decodeNutriQRString(
-          JSON.stringify([
+          toRawNutriQRString([
             'Brand|Product',
             'g',
             100,
@@ -104,7 +106,7 @@ describe('decodeNutriQRString', () => {
       1,
       [50, 10, 5, 20, 10, 1, 4]
     ];
-    const str = JSON.stringify(arr);
+    const str = toRawNutriQRString(arr);
 
     expectNutriQRErrorThrown(
       () => decodeNutriQRString(str),

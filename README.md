@@ -27,7 +27,7 @@ NutriQR solves these problems by embedding complete nutrition information direct
 
 The complete technical specification is available in [`spec.md`](spec.md).
 
-NutriQR encodes nutrition data as a minified JSON array with six fixed positions:
+NutriQR encodes nutrition data as a minified JSON array with six fixed positions, wrapped in an `NQR1:` envelope prefix:
 
 ```js
 [
@@ -40,7 +40,11 @@ NutriQR encodes nutrition data as a minified JSON array with six fixed positions
 ];
 ```
 
-This example encodes complete nutrition information for a 100g of oats in just 82 bytes (once minified).
+This example encodes complete nutrition information for 100g of oats in just 82 bytes (array only) — 87 bytes once minified with the `NQR1:` envelope prefix included, as it would appear in the actual QR payload:
+
+```
+NQR1:["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
+```
 
 <figure>
   <img src="example-nutriqr.png" alt="NutriQR Example" width="120" style="border-radius:16px" />
@@ -59,8 +63,8 @@ This example encodes complete nutrition information for a 100g of oats in just 8
 
 | Package   | Language | Status             | Timeline                     |
 | --------- | -------- | ------------------ | ---------------------------- |
-| `nutriqr` | Swift    | 🔄 **In Progress** | iOS-first implementation     |
-| `nutriqr` | Kotlin   | 🔄 **In Progress** | Android-first implementation |
+| `nutriqr` | Swift    | 📋 **Planned**     | iOS-first implementation     |
+| `nutriqr` | Kotlin   | 📋 **Planned**     | Android-first implementation |
 | `nutriqr` | Python   | 📋 **Maybe**       | Data science and backend use |
 | `nutriqr` | C#       | 📋 **Maybe**       | .NET ecosystem support       |
 
@@ -94,11 +98,13 @@ const nutriqr = createNutriQRString(
     fiber: 8.5,
   }
 );
+console.log(nutriqr); // "NQR1:[\"8720828249062\",...]"
 
 // Decode a NutriQR string
 const decoded = decodeNutriQRString(nutriqr);
-console.log(decoded.product); // "Eiwit Oats"
-console.log(decoded.nutrients.protein); // 10 (per 40g portion)
+console.log(decoded.productName); // "Eiwit Oats"
+console.log(decoded.nutrients.protein); // 25 (per 100g base quantity)
+console.log(decoded.portionQuantity); // 40 (actual serving size in grams)
 ```
 
 ## 🔧 Development

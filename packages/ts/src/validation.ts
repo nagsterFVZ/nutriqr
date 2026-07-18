@@ -57,8 +57,9 @@ export function validateNutriQRArray(arr: unknown[]): NutriQRErrorType | null {
   if (n[4] > n[3]) return NutriQRErrorType.SUGAR_EXCEEDS_CARBS;
   if (n[2] > n[1]) return NutriQRErrorType.SATURATED_FAT_EXCEEDS_TOTAL_FAT;
 
-  // Exclude saturated fat (n[2]) and sugar (n[4]) from total, as they are included in fat and carbs
-  const totalNutrients = n[0] + n[1] + n[3] + n[5] + n[6];
+  // Exclude energy (n[0], measured in kcal not mass), saturated fat (n[2]) and
+  // sugar (n[4]) from total, since saturated fat/sugar are included in fat/carbs
+  const totalNutrients = n[1] + n[3] + n[5] + n[6];
   if (totalNutrients > arr[3])
     return NutriQRErrorType.NUTRIENTS_EXCEED_BASE_QUANTITY;
 

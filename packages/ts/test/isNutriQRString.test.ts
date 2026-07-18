@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { isNutriQRString, createNutriQRString } from '../src/index';
+import { toRawNutriQRString } from './testUtils';
 
 const goodNutrients = {
   energyKcal: 50,
@@ -21,7 +22,7 @@ describe('isNutriQRString', () => {
       1,
       [50, 10, 5, 20, 10, 1, 4]
     ];
-    const validNutriQRString = JSON.stringify(validNutriQR);
+    const validNutriQRString = toRawNutriQRString(validNutriQR);
     expect(isNutriQRString(validNutriQRString)).toBe(true);
   });
 
@@ -29,7 +30,7 @@ describe('isNutriQRString', () => {
     expect(isNutriQRString('not a json')).toBe(false);
     expect(
       isNutriQRString(
-        JSON.stringify([
+        toRawNutriQRString([
           '8720828249062',
           'Brand|Product',
           'g',
@@ -41,7 +42,7 @@ describe('isNutriQRString', () => {
     ).toBe(false); // sugar > carbs
     expect(
       isNutriQRString(
-        JSON.stringify([
+        toRawNutriQRString([
           '8720828249062',
           'Brand|Product',
           'g',
@@ -53,7 +54,7 @@ describe('isNutriQRString', () => {
     ).toBe(false); // sat fat > fat
     expect(
       isNutriQRString(
-        JSON.stringify([
+        toRawNutriQRString([
           '8720828249062',
           'Brand|Product',
           'g',
@@ -65,7 +66,7 @@ describe('isNutriQRString', () => {
     ).toBe(false); // too few nutrients
     expect(
       isNutriQRString(
-        JSON.stringify([
+        toRawNutriQRString([
           '8720828249062',
           'Brand|Product',
           'g',
@@ -86,7 +87,7 @@ describe('isNutriQRString', () => {
       1,
       [50, 10, 5, 20, 25, 1, 4]
     ];
-    const str = JSON.stringify(arr);
+    const str = toRawNutriQRString(arr);
     expect(isNutriQRString(str)).toBe(false);
   });
 

@@ -8,9 +8,10 @@ import type {
   NutriQRUnit,
   NutrientInput
 } from './types.js';
-import { splitEscapedDelimiter } from './utils.js';
+import { splitEscapedDelimiter, parseNutriQRPrefix } from './utils.js';
 import { validateNutriQRArray } from './validation.js';
 import { NutriQRError, NutriQRErrorType } from './errors.js';
+import { NUTRIQR_PREFIX, NUTRIQR_VERSION } from './constants.js';
 
 /**
  * Checks if a string is a valid NutriQR string
@@ -19,7 +20,9 @@ import { NutriQRError, NutriQRErrorType } from './errors.js';
  */
 export function isNutriQRString(str: string): boolean {
   try {
-    const arr = JSON.parse(str);
+    const prefixMatch = parseNutriQRPrefix(str);
+    if (!prefixMatch || prefixMatch.version !== NUTRIQR_VERSION) return false;
+    const arr = JSON.parse(prefixMatch.remainder);
     return validateNutriQRArray(arr) === null;
   } catch {
     return false;
@@ -37,9 +40,20 @@ export function decodeNutriQRString(str: string): ExpandedData {
     throw new NutriQRError(NutriQRErrorType.NON_STRING_INPUT);
   }
 
+  const prefixMatch = parseNutriQRPrefix(str);
+  if (!prefixMatch) {
+    throw new NutriQRError(NutriQRErrorType.INVALID_PREFIX);
+  }
+  if (prefixMatch.version !== NUTRIQR_VERSION) {
+    throw new NutriQRError(
+      NutriQRErrorType.UNSUPPORTED_VERSION,
+      `Unsupported NutriQR version "${prefixMatch.version}". This library supports version ${NUTRIQR_VERSION}.`
+    );
+  }
+
   let arr: unknown;
   try {
-    arr = JSON.parse(str);
+    arr = JSON.parse(prefixMatch.remainder);
   } catch {
     throw new NutriQRError(NutriQRErrorType.INVALID_JSON);
   }
@@ -75,7 +89,8 @@ export function decodeNutriQRString(str: string): ExpandedData {
       salt: nutrientsArr[5],
       protein: nutrientsArr[6],
       ...(nutrientsArr.length === 8 ? { fibre: nutrientsArr[7] } : {})
-    }
+    },
+    version: prefixMatch.version
   };
 }
 
@@ -130,5 +145,5 @@ export function createNutriQRString(
   const errorType = validateNutriQRArray(arr);
   if (errorType) throw new NutriQRError(errorType);
 
-  return JSON.stringify(arr);
+  return `${NUTRIQR_PREFIX}${JSON.stringify(arr)}`;
 }

@@ -2,6 +2,24 @@
  * Utility functions for NutriQR
  */
 
+import { NUTRIQR_PREFIX_REGEX } from './constants.js';
+import type { NutriQRPrefixMatch } from './types.js';
+
+/**
+ * Strips and parses a leading "NQR<version>:" envelope prefix from a raw string.
+ * Returns null if the string does not start with a syntactically valid prefix
+ * (missing, wrong case, wrong separator, non-numeric version, etc).
+ * Does not judge whether the parsed version is supported - callers check that.
+ */
+export function parseNutriQRPrefix(str: string): NutriQRPrefixMatch | null {
+  const match = NUTRIQR_PREFIX_REGEX.exec(str);
+  if (!match) return null;
+  return {
+    version: parseInt(match[1], 10),
+    remainder: str.slice(match[0].length)
+  };
+}
+
 /**
  * Utility to split on first unescaped delimiter and unescape
  */

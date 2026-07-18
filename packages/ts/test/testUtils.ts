@@ -3,7 +3,15 @@
  */
 
 import { expect } from 'vitest';
-import { NutriQRError, NutriQRErrorType } from '../src/index.js';
+import { NutriQRError, NutriQRErrorType, NUTRIQR_PREFIX } from '../src/index.js';
+
+/**
+ * Wraps a raw array with the current spec's envelope prefix, for building test
+ * fixtures that bypass createNutriQRString's own encoding/validation.
+ */
+export function toRawNutriQRString(arr: unknown[]): string {
+  return `${NUTRIQR_PREFIX}${JSON.stringify(arr)}`;
+}
 
 /**
  * Helper function to assert that an error is a NutriQRError with the expected error type

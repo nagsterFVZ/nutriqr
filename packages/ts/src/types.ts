@@ -13,6 +13,13 @@ export type NutriQR = [
   [number, number, number, number, number, number, number, number?]
 ];
 
+export interface NutriQRPrefixMatch {
+  /** Parsed version number from the "NQR<version>:" prefix. */
+  version: number;
+  /** Remainder of the string after the prefix (not yet JSON-parsed). */
+  remainder: string;
+}
+
 export interface ExpandedData {
   gtin13: string;
   manufacturer: string;
@@ -31,6 +38,8 @@ export interface ExpandedData {
     protein: number;
     fibre?: number;
   };
+  /** Array-layout version parsed from the payload's "NQR<version>:" envelope prefix. */
+  version?: number;
 }
 
 export interface NutrientInput {

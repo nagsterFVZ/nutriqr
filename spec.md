@@ -23,7 +23,9 @@ By not rellying on external databases for the key nutrional data apps can be fas
 
 ### 2. Normative data model
 
-The entire payload is a **single JSON array** with **five fixed positions**:
+Every NutriQR payload consists of a short **magic prefix + version identifier**, followed immediately (no whitespace) by a single minified JSON array: `NQR<version>:<json-array>`. `NQR` is a fixed 3-letter magic string; `<version>` is one or more ASCII digits giving the array-layout version (see 8, this document defines version `1`); `:` separates the prefix from the JSON array with no surrounding space. The full prefix for this spec version is therefore **`NQR1:`**.
+
+The array itself is a **single JSON array** with **five fixed positions**:
 
 | Idx | Type     | Name (description)                                       | Required | Notes                                              |
 | --: | -------- | -------------------------------------------------------- | -------- | -------------------------------------------------- |
@@ -57,6 +59,7 @@ _If fibre is absent the array terminates at position 6._
 
 | Rule            | Detail                                                          |
 | --------------- | --------------------------------------------------------------- |
+| Prefix          | Payload must begin with `NQR<version>:` (e.g. `NQR1:`), no whitespace before the array. |
 | Character set   | UTF‑8 only.                                                     |
 | JSON formatting | **Minified** – _no whitespace_.                                 |
 | Decimal format  | Dot (`.`) as radix, arbitrary precision.                        |
@@ -105,6 +108,8 @@ The `unit` field specifies the measurement unit used for both the base quantity 
 
 All nutrient values in the array are assumed to be **per base quantity** in the unit given. For example, if `unit = "oz"` and `baseQuantity = 1`, then nutrients are given **per 1 ounce**.
 
+> Note: the `oz`/`fl` conversion factors above are rounded for readability. Implementations should convert using full precision (1 oz = 28.3495 g, 1 fl oz = 29.5735 ml) to avoid rounding drift.
+
 ---
 
 ### 6. Reference example (spec v 1.0)
@@ -122,10 +127,12 @@ Pretty‑printed for clarity:
 ]
 ```
 
-**Minified (payload string):**
+Pretty-printed array above omits the envelope prefix for clarity - see the full wire payload below.
+
+**Full payload string (minified array, with envelope prefix):**
 
 ```
-["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
+NQR1:["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
 ```
 
 ---
@@ -142,18 +149,24 @@ These libraries expose methods to decode and normalize the compact array into a 
 
 ### 8. Versioning
 
-**Spec version** is implicit (array layout). No version identifier to save on bytes.
+Every payload starts with an explicit version marker, `NQR<version>:`, where `<version>` identifies the array-layout revision that follows. This document defines version `1` (prefix `NQR1:`).
+
+- Non-breaking changes (e.g. widening a numeric range, relaxing a validation rule, adding a new optional trailing nutrient) do not require a version bump.
+- Breaking changes to the array layout (reordering, removing, or repurposing a fixed position; changing the meaning of an existing index) require incrementing the version, e.g. `NQR2:` for the next breaking revision.
+- Implementations must reject payloads that do not begin with a syntactically valid `NQR<digits>:` prefix.
+- Implementations must reject (or clearly surface as unsupported) payloads whose version they do not recognize, rather than attempting to parse the array as if it matched a known layout.
 
 ---
 
 ### 9. Compliance checklist
 
-1. Top‑level JSON array length == 6
-2. Nutrient sub‑array 8 ≥ length ≥ 7
-3. Mandatory positions populated with finite numbers
-4. Unit is `"g"`, `"ml"`, `"oz"` or `"fl"`
-5. No whitespace in final QR payload
-6. UTF‑8 encoding
+1. Payload string begins with a syntactically valid `NQR<version>:` prefix, immediately followed by the JSON array (no whitespace)
+2. Top‑level JSON array length == 6
+3. Nutrient sub‑array 8 ≥ length ≥ 7
+4. Mandatory positions populated with finite numbers
+5. Unit is `"g"`, `"ml"`, `"oz"` or `"fl"`
+6. No whitespace in final QR payload
+7. UTF‑8 encoding
 
 ---
 

@@ -16,7 +16,7 @@
     "format": "prettier --write ."
   },
   "author": "Floris van Zeeland",
-  "license": "ISC",
+  "license": "MIT",
   "keywords": [
     "nutrition",
     "qr",

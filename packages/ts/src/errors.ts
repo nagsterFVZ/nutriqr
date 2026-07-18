@@ -17,7 +17,9 @@ export enum NutriQRErrorType {
   SATURATED_FAT_EXCEEDS_TOTAL_FAT = 'SATURATED_FAT_EXCEEDS_TOTAL_FAT',
   NUTRIENTS_EXCEED_BASE_QUANTITY = 'NUTRIENTS_EXCEED_BASE_QUANTITY',
   INVALID_JSON = 'INVALID_JSON',
-  NON_STRING_INPUT = 'NON_STRING_INPUT'
+  NON_STRING_INPUT = 'NON_STRING_INPUT',
+  INVALID_PREFIX = 'INVALID_PREFIX',
+  UNSUPPORTED_VERSION = 'UNSUPPORTED_VERSION'
 }
 
 export const ERROR_MESSAGES: Record<NutriQRErrorType, string> = {
@@ -39,15 +41,19 @@ export const ERROR_MESSAGES: Record<NutriQRErrorType, string> = {
   [NutriQRErrorType.INVALID_NUTRIENTS_ARRAY]:
     'Nutrients array must have 7 or 8 elements.',
   [NutriQRErrorType.INVALID_NUTRIENT_VALUE]:
-    'Nutrient at index {index} must be a non-negative number.',
+    'Nutrient values must be non-negative numbers.',
   [NutriQRErrorType.SUGAR_EXCEEDS_CARBS]:
     'Sugars must be less than or equal to carbohydrates.',
   [NutriQRErrorType.SATURATED_FAT_EXCEEDS_TOTAL_FAT]:
     'Saturated fat must be less than or equal to total fat.',
   [NutriQRErrorType.NUTRIENTS_EXCEED_BASE_QUANTITY]:
-    'Sum of nutrients (excluding saturated fat and sugar) must not exceed base quantity.',
+    'Sum of nutrients (excluding energy, saturated fat, and sugar) must not exceed base quantity.',
   [NutriQRErrorType.INVALID_JSON]: 'Invalid JSON string.',
-  [NutriQRErrorType.NON_STRING_INPUT]: 'Input must be a string.'
+  [NutriQRErrorType.NON_STRING_INPUT]: 'Input must be a string.',
+  [NutriQRErrorType.INVALID_PREFIX]:
+    'Payload must start with a valid "NQR<version>:" prefix (e.g. "NQR1:") immediately followed by the JSON array.',
+  [NutriQRErrorType.UNSUPPORTED_VERSION]:
+    'Unsupported NutriQR version. This library supports version 1.'
 };
 
 /**
