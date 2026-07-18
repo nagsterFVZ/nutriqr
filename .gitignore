@@ -16,6 +16,9 @@ npm-debug.log*
 .vscode/
 .idea/
 
+# Claude Code
+.claude/
+
 # Python
 __pycache__/
 *.py[cod]

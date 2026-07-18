@@ -13,17 +13,27 @@
     "dev": "tsup src/index.ts --watch",
     "test": "vitest run",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "prepublishOnly": "npm run build"
   },
   "author": "Floris van Zeeland",
-  "license": "MIT",
+  "license": "SEE LICENSE IN LICENSE",
   "keywords": [
     "nutrition",
     "qr",
     "parser",
     "spec"
   ],
-  "description": "",
+  "description": "Reference TypeScript implementation of the NutriQR spec — encode and decode compact QR nutrition-label payloads.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nagsterFVZ/nutriqr.git",
+    "directory": "packages/ts"
+  },
+  "homepage": "https://github.com/nagsterFVZ/nutriqr/tree/main/packages/ts#readme",
+  "bugs": {
+    "url": "https://github.com/nagsterFVZ/nutriqr/issues"
+  },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",

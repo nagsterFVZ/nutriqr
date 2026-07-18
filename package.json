@@ -1,0 +1,18 @@
+{
+  "name": "nutriqr-monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "engines": {
+    "node": ">=18"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=packages/ts && npm run build --workspace=apps/web",
+    "test": "npm test --workspace=packages/ts",
+    "lint": "npm run lint --workspace=packages/ts"
+  }
+}

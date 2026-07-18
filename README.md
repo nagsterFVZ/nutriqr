@@ -2,7 +2,7 @@
 
 > Ultra-compact nutrition data encoding for QR codes
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT + Commons Clause](https://img.shields.io/badge/License-MIT%20%2B%20Commons%20Clause-yellow.svg)](LICENSE)
 
 NutriQR is a specification and library ecosystem for encoding complete nutrition information into ultra-compact QR codes. By packing all mandatory EU nutrition labeling data into under 160 bytes (depending on product name and manufacturer name), NutriQR enables offline nutrition tracking and fast product identification without relying on external databases.
 
@@ -31,8 +31,8 @@ NutriQR encodes nutrition data as a minified JSON array with six fixed positions
 
 ```js
 [
-  "8720828249062", // GTIN-13 product identifier
-  "Upfront|Eiwit Oats", // Brand|Product name
+  "1234567890128", // GTIN-13 product identifier
+  "GrainWorks|Protein Oats", // Brand|Product name
   "g", // Base unit (g/ml/oz/fl)
   100, // Base quantity
   0.4, // Portion multiplier
@@ -40,10 +40,10 @@ NutriQR encodes nutrition data as a minified JSON array with six fixed positions
 ];
 ```
 
-This example encodes complete nutrition information for 100g of oats in just 82 bytes (array only) — 87 bytes once minified with the `NQR1:` envelope prefix included, as it would appear in the actual QR payload:
+This example encodes complete nutrition information for 100g of oats in just 87 bytes (array only) — 92 bytes once minified with the `NQR1:` envelope prefix included, as it would appear in the actual QR payload:
 
 ```
-NQR1:["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
+NQR1:["1234567890128","GrainWorks|Protein Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
 ```
 
 <figure>
@@ -52,6 +52,8 @@ NQR1:["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,2
 </figure>
 
 ## 📦 Packages
+
+> `packages/` contains language implementations of the NutriQR spec (see [Adding New Language Packages](#adding-new-language-packages) below). Consumer applications — currently the docs/demo website — live under [`apps/`](apps/web/).
 
 ### Available
 
@@ -68,6 +70,17 @@ NQR1:["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,2
 | `nutriqr` | Python   | 📋 **Maybe**       | Data science and backend use |
 | `nutriqr` | C#       | 📋 **Maybe**       | .NET ecosystem support       |
 
+## 🌐 Website (Docs & Live Demo)
+
+A Nuxt/Vue site at [`apps/web`](apps/web/) hosts the spec showcase, hand-written documentation, and an interactive live demo — edit nutrition data and watch the `NQR1:...` string and QR code update in real time, in both directions.
+
+```bash
+npm install                      # from the repo root — installs all workspaces
+npm run dev --workspace=apps/web # or: npm run dev
+```
+
+Then open `http://localhost:3000`. The site depends on the local `nutriqr` package (`packages/ts`) via an npm workspace — no separate build step is needed; edits to `packages/ts/src` are picked up live.
+
 ## 🚀 Quick Start
 
 ### TypeScript/JavaScript
@@ -81,9 +94,9 @@ import { createNutriQRString, decodeNutriQRString } from "nutriqr";
 
 // Create a NutriQR string
 const nutriqr = createNutriQRString(
-  "8720828249062",
-  "Upfront",
-  "Eiwit Oats",
+  "1234567890128",
+  "GrainWorks",
+  "Protein Oats",
   "g",
   100,
   0.4,
@@ -95,14 +108,14 @@ const nutriqr = createNutriQRString(
     sugar: 9.7,
     salt: 0.47,
     protein: 25,
-    fiber: 8.5,
+    fibre: 8.5,
   }
 );
-console.log(nutriqr); // "NQR1:[\"8720828249062\",...]"
+console.log(nutriqr); // "NQR1:[\"1234567890128\",...]"
 
 // Decode a NutriQR string
 const decoded = decodeNutriQRString(nutriqr);
-console.log(decoded.productName); // "Eiwit Oats"
+console.log(decoded.productName); // "Protein Oats"
 console.log(decoded.nutrients.protein); // 25 (per 100g base quantity)
 console.log(decoded.portionQuantity); // 40 (actual serving size in grams)
 ```
@@ -147,7 +160,9 @@ If you'd like to implement NutriQR in a new language:
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+The reference implementation code (`packages/`, `apps/`) is licensed under MIT with the [Commons Clause](https://commonsclause.com/) — free to use and embed, including in commercial products and services, but not to resell or repackage the software itself as a competing product. See the [LICENSE](LICENSE) file for details.
+
+The [format specification](spec.md) itself is licensed separately and more permissively, so anyone can freely implement NutriQR in any language — see [spec.md §10](spec.md#10-license).
 
 ## 🔗 Links
 

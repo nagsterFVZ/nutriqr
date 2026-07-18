@@ -39,13 +39,6 @@ whose value derives, entirely or substantially, from the functionality of the
 Software. Any license notice or attribution required by the License must also
 include this Commons Clause License Condition notice.
 
-Software: NutriQR (reference implementations under packages/)
+Software: nutriqr (this package)
 License: MIT
 Licensor: Floris van Zeeland - Distillation Development
-
----
-
-Note: this Commons Clause condition applies to the reference implementation
-code under `packages/`. The NutriQR format specification itself (`spec.md`)
-is licensed separately and more permissively — see spec.md §10 — so that the
-format can be freely implemented in any language without restriction.

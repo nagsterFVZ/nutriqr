@@ -29,7 +29,7 @@ The array itself is a **single JSON array** with **five fixed positions**:
 
 | Idx | Type     | Name (description)                                       | Required | Notes                                              |
 | --: | -------- | -------------------------------------------------------- | -------- | -------------------------------------------------- |
-|   0 | `string` | **GTIN-13** — Used for product identification            | ✔︎       | `"8720828249062"` (see 4.1)                        |
+|   0 | `string` | **GTIN-13** — Used for product identification            | ✔︎       | `"1234567890128"` (see 4.1)                        |
 |   1 | `string` | **Product‑Manufacturer** — combined name, delimiter `\|` | ✔︎       | `"Brand\|Product"` (see 4.2)                       |
 |   2 | `string` | **Base unit**                                            | ✔︎       | `"g" \| "ml" \| "oz" \| "fl"` _(lower‑case)_       |
 |   3 | `number` | **Base quantity**                                        | ✔︎       | Usually `100` (per 100 g / ml)                     |
@@ -118,8 +118,8 @@ Pretty‑printed for clarity:
 
 ```jsonc
 [
-  "8720828249062",
-  "Upfront|Eiwit Oats",
+  "1234567890128",
+  "GrainWorks|Protein Oats",
   "g",
   100,
   0.4,
@@ -132,7 +132,7 @@ Pretty-printed array above omits the envelope prefix for clarity - see the full 
 **Full payload string (minified array, with envelope prefix):**
 
 ```
-NQR1:["8720828249062","Upfront|Eiwit Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
+NQR1:["1234567890128","GrainWorks|Protein Oats","g",100,0.4,[415,13,5.6,43,9.7,0.47,25,8.5]]
 ```
 
 ---
@@ -172,7 +172,9 @@ Every payload starts with an explicit version marker, `NQR<version>:`, where `<v
 
 ### 10. License
 
-This specification is released under the **MIT License**. Contributions welcome via pull‑requests.
+This specification document is released under the **MIT License**, unrestricted — anyone may freely implement the NutriQR format in any language, including in commercial products and services, without needing permission or a separate license. Contributions welcome via pull‑requests.
+
+The reference implementation code in this repository (under `packages/`) is licensed separately, under MIT with the [Commons Clause](https://commonsclause.com/) — free to use and embed, but not to resell or repackage the code itself as a competing product. See the root [LICENSE](LICENSE) file for details. This distinction is deliberate: the *format* stays fully open so the standard can spread, while the *reference code* is protected from being resold as-is.
 
 ---
 
