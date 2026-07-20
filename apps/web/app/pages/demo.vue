@@ -22,6 +22,11 @@ definePageMeta({ ssr: false })
       </p>
     </div>
 
+    <div class="mb-6 flex items-center justify-center gap-3">
+      <p class="text-sm text-neutral-400">Have a real NutriQR code on hand?</p>
+      <DemoQrScanner />
+    </div>
+
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <DemoNutrientForm />
       <div class="flex flex-col gap-6">
